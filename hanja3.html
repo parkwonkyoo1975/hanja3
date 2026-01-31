@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌟 초등 필수 한자 300</title>
+    <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.0.0/dist/hanzi-writer.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+        :root { --primary: #4CAF50; --secondary: #FFD700; --bg: #F0F4F0; --point-blue: #2196F3; }
+        body { font-family: 'Jua', sans-serif; background-color: var(--bg); margin: 0; padding: 0; color: #333; }
+        header { background: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--secondary); position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 1.8rem; color: var(--primary); cursor: pointer; }
+        .nav-menu button { background: var(--primary); color: white; border: none; padding: 8px 15px; border-radius: 10px; cursor: pointer; font-family: 'Jua'; margin-left: 5px; }
+        .page { display: none; padding: 20px; max-width: 800px; margin: auto; }
+        .active { display: block; }
+        .card { background: white; padding: 30px; border-radius: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); margin-bottom: 25px; text-align: center; }
+        #login-page { text-align: center; padding-top: 100px; }
+        .login-input { width: 80%; max-width: 300px; padding: 15px; font-size: 1.5rem; border: 2px solid #ddd; border-radius: 15px; font-family: 'Jua'; text-align: center; margin-bottom: 20px; }
+        .section-title { border-left: 5px solid var(--primary); padding-left: 10px; margin-top: 30px; text-align: left; font-size: 1.3rem; }
+        .info-label { font-size: 1.8rem; font-weight: bold; margin: 5px 0; }
+        .breakdown-table { width: 100%; border-collapse: collapse; margin-top: 15px; background: #fff; border-radius: 15px; overflow: hidden; border: 1px solid #eee; }
+        .breakdown-table td { border: 1px solid #eee; padding: 20px; text-align: center; }
+        .hanja-unit { font-size: 3.5rem; color: var(--primary); font-weight: bold; width: 40%; }
+        .meaning-unit { font-size: 1.8rem; color: #444; text-align: left; padding-left: 30px; }
+        .step-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: #fff; padding: 10px 20px; border-radius: 50px; }
+        .btn-step { background: var(--primary); color: white; border: none; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-family: 'Jua'; }
+        .writer-flex { display: flex; justify-content: center; gap: 20px; margin: 20px 0; flex-wrap: wrap; }
+        .char-box { border: 2px solid #ddd; border-radius: 15px; background: white; padding: 10px; width: 140px; height: 140px; display: flex; align-items: center; justify-content: center; position: relative; }
+        .quiz-option { display: block; width: 100%; padding: 15px; margin: 10px 0; background: white; border: 2px solid #eee; border-radius: 15px; font-family: 'Jua'; font-size: 1.2rem; cursor: pointer; }
+        .btn-action { background: #4CAF50; color: white; border: none; padding: 12px 25px; border-radius: 15px; font-size: 1.1rem; cursor: pointer; font-family: 'Jua'; margin: 5px; }
+        .progress-container { width: 100%; background-color: #eee; border-radius: 10px; margin-bottom: 10px; height: 8px; }
+        .progress-fill { height: 100%; background-color: var(--point-blue); border-radius: 10px; width: 0%; transition: 0.3s; }
+    </style>
+</head>
+<body>
+
+<div id="login-page" class="page active">
+    <div class="card">
+        <h1 style="font-size: 2.5rem; margin-bottom: 30px;">이름을 입력하면 시작해요!</h1>
+        <input type="text" id="user-name-input" class="login-input" placeholder="이름 입력"><br>
+        <button class="btn-action" style="font-size: 1.5rem; padding: 15px 40px;" onclick="handleLogin()">학습 시작하기</button>
+    </div>
+</div>
+
+<div id="main-content" style="display: none;">
+    <header>
+        <div class="logo" onclick="location.reload()">🌟 초등 필수 한자 300</div>
+        <div id="user-display"><span id="display-name" style="margin-right:10px; font-size:1.1rem; color:#666;"></span><span id="user-pts" style="background: var(--primary); color: white; padding: 5px 12px; border-radius: 10px;">0P</span></div>
+        <div class="nav-menu">
+            <button onclick="showPage('page1')">학습하기</button>
+            <button onclick="showPage('page2')">쓰기연습</button>
+            <button onclick="showPage('page3')">내 단어장</button>
+        </div>
+    </header>
+
+    <div id="page1" class="page">
+        <div id="study-box">
+            <div class="progress-container"><div id="main-progress" class="progress-fill"></div></div>
+            <div class="step-bar">
+                <button class="btn-step" onclick="changeWord(-1)">◀ 이전</button>
+                <span id="progress-text">1 / 100</span>
+                <button class="btn-step" onclick="changeWord(1)">다음 ▶</button>
+            </div>
+            <div class="card">
+                <h1 id="main-word" style="color:var(--point-blue); font-size: 4.5rem; margin: 0 0 10px;"></h1>
+                <div id="main-eum" class="info-label" style="color: #FF5722;"></div>
+                <div id="main-desc" class="info-label" style="color: #2196F3;"></div>
+                <h3 class="section-title">① 한자 뜻풀이</h3><table class="breakdown-table"><tbody id="hanja-breakdown"></tbody></table>
+                <h3 class="section-title">② 획순 따라보기</h3><div class="writer-flex" id="writer-container"></div><button class="btn-action" style="background:#2196F3;" onclick="playSequence()">다시 보기</button>
+                <h3 class="section-title">③ 퀴즈 풀기</h3><div id="quiz-content"></div><br><button class="btn-action" style="background:#FF9800; width:100%;" onclick="saveToCollection()">오늘의 단어 저장! 🎒</button>
+            </div>
+        </div>
+    </div>
+    <div id="page2" class="page"><div class="card"><h2>✍️ 직접 써보기</h2><div id="target-draw" class="char-box" style="width:240px; height:240px; margin: auto;"></div><p id="quiz-guide" style="font-size:1.5rem; color:var(--primary); margin: 20px 0;">글자를 선택해 주세요.</p><div id="draw-buttons"></div></div></div>
+    <div id="page3" class="page"><div class="card"><h2>🎒 나의 수집 단어장</h2><div id="collection-list" style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;"></div></div></div>
+</div>
+
+<script>
+    // [보정 로직] 획순 애니메이션 자형 매핑
+    const charMap = {
+        '鄕': '郷', // 시골 향 (데이터 보정)
+        '産': '産'  // 낳을 산 (U+7523 사용)
+    };
+
+    const hanjaDic = {
+        "都": "도읍 도", "市": "저자 시", "首": "머리 수", "地": "땅 지", "域": "지경 역", "場": "마당 장", "交": "사귈 교", "通": "통할 통", "公": "공변될 공", "園": "동산 원",
+        "産": "낳을 산", "業": "업 업", "農": "농사 농", "村": "마을 촌", "漁": "고기잡을 어", "里": "마을 리", "洞": "마을 동", "圖": "그림 도", "故": "연고 고", "住": "살 주", "民": "백성 민",
+        "環": "고리 환", "境": "지경 경", "領": "거느릴 령", "土": "흙 토", "街": "거리 가", "物": "만물 물", "質": "바탕 질", "狀": "형상 상", "態": "모습 태", "溫": "따뜻할 온",
+        "度": "법도 도", "風": "바람 풍", "速": "빠를 속", "光": "빛 광", "線": "줄 선", "表": "겉 표", "面": "낯 면", "生": "날 생", "命": "목숨 명", "動": "움직일 동",
+        "植": "심을 식", "身": "몸 신", "心": "마음 심", "氣": "기운 기", "體": "몸 체", "星": "별 성", "座": "자리 좌", "日": "날 일", "大": "큰 대", "水": "물 수",
+        "分": "나눌 분", "過": "지날 과", "去": "갈 거", "現": "나타날 현", "在": "있을 재", "未": "아닐 미", "來": "올 래", "計": "셀 계", "劃": "그을 획", "期": "기약할 기",
+        "間": "사이 간", "記": "기록할 기", "念": "생각할 념", "時": "때 시", "刻": "새길 각", "正": "바를 정", "午": "낮 오", "昨": "어제 작", "年": "해 년", "明": "밝을 명",
+        "注": "부을 주", "意": "뜻 의", "待": "기다릴 대", "配": "나눌 배", "協": "도울 협", "力": "힘 력", "尊": "높을 존", "重": "무거울 중", "格": "격식 격", "失": "잃을 실",
+        "敗": "패할 패", "消": "사라질 소", "火": "불 화", "名": "이름 명", "義": "옳을 의", "感": "느낄 감", "謝": "사례할 사", "直": "곧을 직", "曲": "굽을 곡", "三": "석 삼",
+        "角": "뿔 각", "四": "넉 사", "圓": "둥글 원", "形": "모양 형", "中": "가운데 중", "合": "합할 합", "差": "어긋날 차", "異": "다를 이", "順": "순할 순", "序": "차례 서",
+        "移": "옮길 이", "停": "머무를 정", "止": "그칠 지", "反": "돌이킬 반", "對": "대답할 대", "共": "한가지 공", "區": "구분할 구", "別": "나눌 별", "特": "특별할 특",
+        "基": "터 기", "礎": "주춧돌 초", "準": "갖출 준", "備": "갖출 비", "完": "완전할 완", "成": "이룰 성", "始": "처음 시", "作": "지을 작", "終": "끝날 종", "了": "마칠 료",
+        "使": "부릴 사", "用": "쓸 용", "發": "필 발", "變": "변할 변", "化": "될 화", "追": "쫓을 추", "加": "더할 가", "除": "덜 제", "選": "가릴 선", "擇": "가릴 택",
+        "決": "결단할 결", "定": "정할 정", "行": "다닐 행", "音": "소리 음", "樂": "노래 악", "美": "아름다울 미", "術": "재주 술", "活": "살 활", "歌": "노래 가", "謠": "노래 요",
+        "勝": "이길 승", "利": "이로울 리", "競": "다툴 경", "技": "재주 기", "應": "응할 응", "援": "도울 원", "退": "물러날 퇴", "恩": "은혜 은", "師": "스승 사", "同": "한가지 동",
+        "僚": "벗 료", "親": "친할 친", "族": "겨레 족", "先": "먼저 선", "祖": "할아비 조", "女": "여자 녀", "息": "숨쉴 식", "功": "공 공", "和": "화할 화", "睦": "화목할 목",
+        "本": "근본 본", "位": "자리 위", "置": "둘 치", "結": "맺을 결", "末": "끝 말"
+    };
+
+    const rawData = [
+        "都市,도시,사람이 많이 사는 곳", "首都,수도,한 나라의 중심지", "地域,지역,일정한 범위의 땅", "市場,시장,물건을 사고파는 곳", "交通,교통,오고 가는 일", "公園,공원,모두가 쉬는 정원", "産業,산업,물건을 만드는 일", "農村,농촌,농사를 짓는 마을", "漁村,어촌,고기 잡는 마을", "里洞,리동,마을과 동네",
+        "地圖,지도,땅의 모양을 그린 그림", "住民,주민,마을에 사는 사람", "環境,환경,둘러싸고 있는 형편", "領土,영토,한 나라의 땅", "市街,시가,도시의 거리", "物質,물질,물건을 이루는 본바탕", "狀態,상태,사물의 모습", "溫度,온도,따뜻하고 차가운 정도", "風速,풍속,바람의 속도", "光線,광선,빛의 줄기",
+        "表面,표면,사물의 겉면", "生命,생명,살아 있는 목숨", "動物,동물,움직이는 생물", "植物,식물,뿌리 박고 사는 생물", "身心,신심,몸과 마음", "氣體,기체,공기 같은 상태", "星座,성좌,별의 자리", "日光,일광,해의 빛", "大風,대풍,큰 바람", "水分,수분,물기",
+        "過去,과거,지나간 때", "現在,현재,지금 있는 때", "未來,미래,아직 오지 않은 때", "計劃,계획,미리 정한 일", "期間,기간,어느 때부터 어느 때까지", "記念,기념,잊지 않고 기억함", "時刻,시각,어느 한 때", "正午,정오,낮 12시", "昨年,작년,지난해", "明年,명년,다음 해",
+        "注意,주의,마음을 집중함", "期待,기대,바라고 기다림", "心配,심배,걱정하고 염려함", "協力,협력,힘을 합침", "尊重,존중,높여 귀하게 여김", "體格,체격,몸의 형체", "失敗,실패,일을 잘못함", "消火,소화,불을 끔", "名義,명의,문서상의 이름", "感謝,감사,고마워함",
+        "直線,직선,곧은 선", "曲線,곡선,굽은 선", "三角,삼각,세 개의 뿔", "四角,사각,네 개의 뿔", "圓形,원형,둥근 모양", "中心,중심,한가운데", "角度,각도,뿔의 벌어진 정도", "合計,합계,모두 합한 수", "差異,차이,서로 다른 정도", "順序,순서,차례",
+        "移動,이동,옮겨서 움직임", "停止,정지,멈춤", "通過,통과,지나서 나감", "反對,반대,거꾸로 마주함", "共通,공통,서로 똑같이 가짐", "區別,구별,나누어서 다르게 함", "特別,특별,보통과 다름", "基礎,기초,사물의 근본 터", "準備,준비,미리 갖춤", "完成,완성,다 이룸",
+        "始作,시작,처음으로 함", "終了,종료,끝마침", "使用,사용,사용함", "發生,발생,일이 생겨남", "變化,변화,바뀌어서 달라짐", "追加,추가,나중에 더함", "除去,제거,없애 버림", "選擇,선택,여럿 중 가림", "決定,결정,확실히 정함", "行動,행동,몸을 움직임",
+        "音樂,음악,목소리나 악기 소리", "美術,미술,그림이나 조각", "活氣,활기,살아 있는 기운", "歌謠,가요,노래", "作曲,작곡,곡을 지음", "勝利,승리,이기고 이로움", "競技,경기,재주를 다툼", "選手,선수,뽑힌 사람", "應援,응원,힘을 도와줌", "退場,퇴장,밖으로 물러남",
+        "恩師,은사,고마운 스승", "同僚,동료,함께 일하는 벗", "親族,친족,가까운 친척", "先祖,선조,조상", "女息,여식,딸", "成功,성공,공을 이룸", "和睦,화목,서로 뜻이 맞음", "本心,본심,본디의 마음", "位置,위치,사물이 있는 곳", "結末,결말,일의 끝"
+    ];
+
+    const hanjaList = rawData.map((item, idx) => {
+        const [hanja, eum, desc] = item.split(",");
+        return { id: idx + 1, word: hanja, eum: eum, desc: desc };
+    });
+
+    let currentUserName = ""; let userData = { points: 0, cards: [], lastIdx: 0 }; let currentIndex = 0; let writers = [];
+
+    function handleLogin() {
+        const nameInput = document.getElementById('user-name-input').value.trim();
+        if (!nameInput) { alert("이름을 입력해주세요!"); return; }
+        currentUserName = nameInput;
+        const storageKey = 'hanjaMaster_V300_Final_Corrected_' + currentUserName;
+        const saved = localStorage.getItem(storageKey);
+        if(saved) userData = JSON.parse(saved);
+        else userData = { points: 0, cards: [], lastIdx: 0 };
+        document.getElementById('login-page').style.display = 'none';
+        document.getElementById('main-content').style.display = 'block';
+        document.getElementById('display-name').innerText = currentUserName + "님 반가워요!";
+        showPage('page1'); updateHeader(); loadWord(userData.lastIdx || 0);
+    }
+
+    function loadWord(idx) {
+        currentIndex = idx; userData.lastIdx = idx; const data = hanjaList[idx];
+        document.getElementById('main-word').innerText = data.word;
+        document.getElementById('main-eum').innerText = `음 : ${data.eum}`;
+        document.getElementById('main-desc').innerText = `뜻 : ${data.desc}`;
+        document.getElementById('progress-text').innerText = `${idx + 1} / 100`;
+        document.getElementById('main-progress').style.width = (idx + 1) + "%";
+
+        const breakdownTable = document.getElementById('hanja-breakdown');
+        breakdownTable.innerHTML = '';
+        [...data.word].forEach(char => {
+            const meaning = hanjaDic[char] || "뜻풀이 준비중";
+            breakdownTable.innerHTML += `<tr><td class="hanja-unit">${char}</td><td class="meaning-unit">${meaning}</td></tr>`;
+        });
+
+        const container = document.getElementById('writer-container');
+        container.innerHTML = ''; writers = [];
+        [...data.word].forEach((char, i) => {
+            const box = document.createElement('div');
+            box.className = 'char-box'; box.id = `char-box-${i}`;
+            container.appendChild(box);
+            let drawChar = charMap[char] || char; 
+            const writer = HanziWriter.create(box.id, drawChar, { width: 120, height: 120, padding: 5, strokeColor: i % 2 === 0 ? '#4CAF50' : '#1A237E' });
+            writers.push(writer);
+        });
+        setTimeout(() => playSequence(), 500);
+
+        const qBox = document.getElementById('quiz-content');
+        const wrongIdx = (idx + 13) % 100;
+        const options = [data.desc, hanjaList[wrongIdx].desc].sort(() => Math.random() - 0.5);
+        qBox.innerHTML = `<p style="font-size:1.4rem; margin-bottom:15px;"><b>${data.word}</b> 의 올바른 뜻은?</p>`;
+        options.forEach((opt, i) => { qBox.innerHTML += `<button class="quiz-option" onclick="checkQuiz(this, '${opt}' === '${data.desc}')">${i+1}. ${opt}</button>`; });
+
+        const drawBtns = document.getElementById('draw-buttons');
+        drawBtns.innerHTML = ''; [...data.word].forEach(char => { drawBtns.innerHTML += `<button class="btn-action" onclick="startDraw('${char}')">${char} 쓰기</button>`; });
+        saveData();
+    }
+
+    async function playSequence() { for (let writer of writers) { writer.hideCharacter(); await new Promise(r => writer.animateCharacter({ onComplete: r })); } }
+    function checkQuiz(btn, isCorrect) { if(isCorrect) { btn.style.background = "#c8e6c9"; userData.points += 10; updateHeader(); alert("정답입니다! +10P ✨"); } else { btn.style.background = "#ffcdd2"; alert("다시 확인해 보세요! 🤔"); } }
+    function startDraw(char) { showPage('page2'); document.getElementById('target-draw').innerHTML = ''; document.getElementById('quiz-guide').innerText = `"${char}"를 순서대로 써보세요!`; let drawChar = charMap[char] || char; const dw = HanziWriter.create('target-draw', drawChar, { width: 240, height: 240, showCharacter: false, showHintAfterMisses: 1 }); dw.quiz({ onComplete: () => { userData.points += 20; updateHeader(); alert("참 잘했어요! +20P 👍"); }}); }
+    function saveToCollection() { const word = hanjaList[currentIndex].word; if(!userData.cards.includes(word)) { userData.cards.push(word); userData.points += 50; updateHeader(); alert(`'${word}' 단어를 저장했습니다! +50P 🎒`); } else alert("이미 저장된 단어입니다!"); }
+    function changeWord(n) { const next = currentIndex + n; if(next >= 0 && next < 100) loadWord(next); }
+    function updateHeader() { document.getElementById('user-pts').innerText = userData.points + "P"; saveData(); }
+    function saveData() { if(currentUserName) { localStorage.setItem('hanjaMaster_V300_Final_Corrected_' + currentUserName, JSON.stringify(userData)); } }
+    function showPage(pId) { document.querySelectorAll('.page').forEach(p => { if(p.id !== 'login-page') p.classList.remove('active'); }); document.getElementById(pId).classList.add('active'); if(pId === 'page3') renderCards(); }
+    function renderCards() { const list = document.getElementById('collection-list'); list.innerHTML = ''; if(userData.cards.length === 0) { list.innerHTML = '<p style="grid-column: 1/3;">수집한 단어가 없습니다.</p>'; return; } userData.cards.forEach(wordStr => { const data = hanjaList.find(i => i.word === wordStr); if(data) { list.innerHTML += `<div class="card" style="padding:15px; margin:0; border:2px solid var(--secondary);"><h3 style="margin:0; color:var(--point-blue);">${data.word}</h3><p style="margin:5px 0 0; font-size:0.9rem;">${data.desc}</p></div>`; } }); }
+</script>
+</body>
+</html>
